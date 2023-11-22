@@ -61,7 +61,16 @@ describe('Server Routes', () => {
       const nameEl = document.querySelector('[data-test-id="pokemon-name"]')
       expect(nameEl.textContent).to.include(POKEMON_DATA.name)
     })
-    it('/pokemon?name=pokemonName should render pokemon image')
+    it('/pokemon?name=pokemonName should render pokemon image'), async () => {
+      const res = await request(app)
+        .get('/pokemon?name=banana')
+        .expect (200)         
+      expect(pokeStub.calledWith('banana'))
+      const {window: {document}} = new JSDOM(res.text)
+      const imageEl = document.querySelector('[data-test-id= "pokemon-image"]')
+      exect (imageEl.src).to.equal(POKEMON_DATA.sprite);
+  };
+
     it('/pokemon?name=pokemonName should render pokemon types')
     it('/pokemon?name=pokemonName should render pokemon height')
     it('/pokemon?name=pokemonName should render pokemon weight')
