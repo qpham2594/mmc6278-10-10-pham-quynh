@@ -60,7 +60,8 @@ describe('Server Routes', () => {
       const { window: { document } } = new JSDOM(res.text)
       const nameEl = document.querySelector('[data-test-id="pokemon-name"]')
       expect(nameEl.textContent).to.include(POKEMON_DATA.name)
-    })
+    });
+
     it('/pokemon?name=pokemonName should render pokemon image'), async () => {
       const res = await request(app)
         .get('/pokemon?name=banana')
@@ -68,12 +69,36 @@ describe('Server Routes', () => {
       expect(pokeStub.calledWith('banana'))
       const {window: {document}} = new JSDOM(res.text)
       const imageEl = document.querySelector('[data-test-id= "pokemon-image"]')
-      exect (imageEl.src).to.equal(POKEMON_DATA.sprite);
+      expect (imageEl.src).to.equal(POKEMON_DATA.sprite);
   };
 
-    it('/pokemon?name=pokemonName should render pokemon types')
-    it('/pokemon?name=pokemonName should render pokemon height')
-    it('/pokemon?name=pokemonName should render pokemon weight')
+    it('/pokemon?name=pokemonName should render pokemon types'), async () => {
+      const res = await request(app)
+      .get('/pokemon?name=banana')
+      .expect(200);
+    const { window: { document } } = new JSDOM(res.text);
+    const typesEl = document.querySelector('[data-test-id="pokemon-types"]');
+    expect(typesEl.textContent).to.include(POKEMON_DATA.types.join(', '));
+    };
+
+    it('/pokemon?name=pokemonName should render pokemon height'), async () => {
+      const res = await request(app)
+      .get('/pokemon?name=banana')
+      .expect(200);
+    const { window: { document } } = new JSDOM(res.text);
+    const heightEl = document.querySelector('[data-test-id="pokemon-height"]');
+    expect(heightEl.textContent).to.include(POKEMON_DATA.height);
+  };
+
+    it('/pokemon?name=pokemonName should render pokemon weight'), async () => {
+      const res = await request(app)
+      .get('/pokemon?name=banana')
+      .expect(200);
+    const { window: { document } } = new JSDOM(res.text);
+    const weightEl = document.querySelector('[data-test-id="pokemon-weight"]');
+    expect(weightEl.textContent).to.include(POKEMON_DATA.weight);
+    };
+    
     it('should render "Pokemon not found" if given non-existent pokemon', async () => {
       pokeStub.restore()
       sinon.stub(pokeUtil, 'getPokemon').rejects(new Error('oh no'))
